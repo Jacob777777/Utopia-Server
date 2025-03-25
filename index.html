@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Utopia Server</title>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // 禁用右鍵選單
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 禁用選取
+        document.addEventListener('selectstart', event => event.preventDefault());
+
+        // 禁用複製
+        document.addEventListener('copy', event => event.preventDefault());
+
+        // 打字機效果
+        function typeWriter(element, text, speed = 100, callback) {
+            let i = 0;
+            element.textContent = '';
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        // 當頁面加載完成後執行打字機效果
+        document.addEventListener('DOMContentLoaded', () => {
+            const ipElement = document.getElementById('server-ip');
+            const serverIP = 'std-computing-hk1.lib.homes:20003';
+            
+            // 循環打字效果
+            function loopTypeWriter() {
+                typeWriter(ipElement, serverIP, 100, () => {
+                    setTimeout(() => {
+                        ipElement.textContent = '';
+                        loopTypeWriter();
+                    }, 2000);
+                });
+            }
+            
+            loopTypeWriter();
+
+            // 複製IP按鈕功能
+            document.getElementById('copy-ip').addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(serverIP);
+                    const button = document.getElementById('copy-ip');
+                    button.textContent = '已複製！';
+                    setTimeout(() => button.textContent = '複製 IP', 2000);
+                } catch (err) {
+                    console.error('複製失敗:', err);
+                }
+            });
+
+            // 固定複製按鈕位置
+            const copyButton = document.getElementById('copy-ip');
+            copyButton.style.position = 'absolute';
+            copyButton.style.right = '1.5rem';
+        });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #server-status {
+            font-weight: bold;
+        }
+
+        #server-status.online {
+            color: #4CAF50;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        :root {
+            --primary-color: #FFFFFF;
+            --dark-bg: #1A1A1A;
+            --light-text: #FFFFFF;
+            --secondary-bg: #2D2D2D;
+            --hover-color: #CCCCCC;
+            --font-primary: 'Press Start 2P', cursive;
+            --font-secondary: 'Press Start 2P', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--light-text);
+            font-family: var(--font-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin: 0;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .logo {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 2rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .video-container {
+            position: relative;
+            width: 80%;
+            height: 100vh;
+            margin: 0 auto;
+            border: 1px solid var(--light-text);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .server-info {
+            background: rgba(29, 29, 29, 0.9);
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .server-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+        }
+
+        .server-info h2 {
+            color: var(--light-text);
+            font-family: var(--font-secondary);
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .info-item {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            max-width: 800px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-item:hover {
+            background: rgba(0, 0, 0, 0.25);
+            transform: translateX(5px);
+        }
+
+        .copy-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--light-text);
+            color: var(--light-text);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .copy-button:hover {
+            background: var(--light-text);
+            color: var(--dark-bg);
+        }
+
+        .info-item i {
+            color: var(--light-text);
+            font-family: var(--font-secondary);
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+        }
+
+        .info-item p {
+            font-size: 1.1rem;
+        }
+
+        .discord-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 1px solid var(--light-text);
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-top: 2rem;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .discord-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .discord-button:hover::before {
+            left: 100%;
+        }
+
+        .discord-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .discord-button:hover {
+            background: var(--light-text);
+            color: var(--dark-bg);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 5px var(--primary-color));
+            }
+            to {
+                filter: drop-shadow(0 0 15px var(--primary-color));
+            }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(29, 29, 29, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--light-text);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .nav-link {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: transparent;
+            border: 1px solid var(--light-text);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--light-text);
+            font-family: var(--font-secondary);
+            letter-spacing: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            padding-top: 5rem;
+        }
+
+        .footer {
+            background: rgba(29, 29, 29, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--light-text);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .logo {
+                max-width: 220px;
+            }
+
+            .server-info {
+                padding: 2rem;
+            }
+
+            .info-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .discord-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-link">首頁</a>
+            <a href="#server-info" class="nav-link">伺服器資訊</a>
+            <a href="#features" class="nav-link">伺服器特色</a>
+            <a href="#gameplay" class="nav-link">遊戲玩法</a>
+            <a href="#rules" class="nav-link">伺服器規則</a>
+            <a href="#community" class="nav-link">社群活動</a>
+            <a href="#admins" class="nav-link">管理員</a>
+        </div>
+    </nav>
+    <div class="container fade-in">
+        <header id="home" class="header">
+            <h1 style="font-family: var(--font-primary); font-size: 2.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Minecraft Utopia Server</h1>
+            <img src="Utopia.jpg" alt="Utopia Server Logo" class="logo">
+        </header>
+
+        <div class="video-container">
+            <iframe width="853" height="480" src="https://www.youtube.com/embed/tYDOsXYVXVc" title="I Built UTOPIA in Minecraft Hardcore (10M+ BLOCKS)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+        <div id="server-info" class="server-info fade-in">
+            <h2>伺服器資訊</h2>
+            <div class="info-item" style="position: relative;">
+                <i>🌐</i>
+                <p>伺服器 IP: <span id="server-ip"></span></p>
+                <button id="copy-ip" class="copy-button" style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);">複製 IP</button>
+            </div>
+            <div class="info-item">
+                <i>🎮</i>
+                <p id="server-status">正在檢查伺服器狀態...</p>
+            </div>
+        </div>
+
+        <div id="features" class="server-info fade-in">
+            <h2>伺服器特色</h2>
+            <div class="info-item">
+                <i>🏰</i>
+                <p>原創生存玩法：獨特的建築系統和經濟體系，讓您體驗不一樣的 Minecraft 世界</p>
+            </div>
+            <div class="info-item">
+                <i>⚔️</i>
+                <p>豐富的 PvP 內容：與城邦開戰/一般競技場等等的有趣玩法</p>
+            </div>
+            <div class="info-item">
+                <i>🤝</i>
+                <p>和諧的遊戲環境：反作弊系統確保公平性，管理團隊 24 小時維護遊戲秩序</p>
+            </div>
+        </div>
+
+        <div id="gameplay" class="server-info fade-in">
+            <h2>遊戲玩法</h2>
+            <div class="info-item">
+                <i>🏠</i>
+                <p>建立城邦：組建自己的城邦，招募居民，發展經濟，打造屬於自己的烏托邦</p>
+            </div>
+            <div class="info-item">
+                <i>💰</i>
+                <p>經商交易：服務器設有經濟系統，開設商店，與其他玩家進行交易</p>
+            </div>
+            <div class="info-item">
+                <i>🎯</i>
+                <p>任務獎金：接取各種任務，探索世界，獲得豐厚獎勵</p>
+            </div>
+        </div>
+
+        <div id="rules" class="server-info fade-in">
+            <h2>伺服器規則</h2>
+            <div class="info-item">
+                <i>📜</i>
+                <p>歡迎來到我們的 Minecraft 生存建造伺服器！在這裡，您可以盡情發揮創意，建造屬於自己的世界，並與其他玩家互動。</p>
+            </div>
+            <div class="info-item">
+                <i>🤝</i>
+                <p>尊重他人：請對其他玩家保持友善，避免任何形式的騷擾或侮辱。</p>
+            </div>
+            <div class="info-item">
+                <i>⚖️</i>
+                <p>禁止作弊：不得使用任何形式的作弊工具或漏洞，確保遊戲公平性。</p>
+            </div>
+            <div class="info-item">
+                <i>🏠</i>
+                <p>禁止破壞他人建築：未經允許，不得破壞或竊取其他玩家的建築和財產。</p>
+            </div>
+            <div class="info-item">
+                <i>🚫</i>
+                <p>禁止廣告：不得在伺服器內部宣傳其他伺服器或網站。</p>
+            </div>
+            <div class="info-item">
+                <i>👮</i>
+                <p>遵守管理員指示：服從伺服器管理員的指導和決策，共同維護良好的遊戲環境。</p>
+            </div>
+        </div>
+
+        <div id="community" class="server-info fade-in">
+            <h2>社群活動</h2>
+            <div class="info-item">
+                <i>🎉</i>
+                <p>定期活動：每週舉辦各種趣味活動，豐富的活動獎勵等你來拿</p>
+            </div>
+            <div class="info-item">
+                <i>🏆</i>
+                <p>競技比賽：參與建築比賽、PvP 競技等活動，展現你的實力</p>
+            </div>
+            <div class="info-item">
+                <i>👥</i>
+                <p>社群互動：活躍的玩家社群，結交志同道合的朋友，共同創造精彩回憶</p>
+            </div>
+        </div>
+
+        <div id="admins" class="server-info fade-in">
+            <h2>管理員</h2>
+            <div class="info-item" id="admin-ANNATE1224">
+                <img src="https://mc-heads.net/avatar/ANNATE1224" alt="ANNATE1224" class="admin-avatar" style="width: 32px; height: 32px; border-radius: 4px; margin-right: 10px;">
+                <div>
+                    <p>ANNATE1224 - 伺服器主要管理員</p>
+                </div>
+            </div>
+            <div class="info-item" id="admin-Jacob_0602">
+                <img src="https://mc-heads.net/avatar/Jacob_0602" alt="Jacob_0602" class="admin-avatar" style="width: 32px; height: 32px; border-radius: 4px; margin-right: 10px;">
+                <div>
+                    <p>Jacob_0602 - 伺服器管理員</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>🌐 伺服器 IP: std-computing-hk1.lib.homes:20003</p>
+                <a href="https://discord.gg/xdkmmpMWfx" target="_blank" class="discord-button">加入 Discord</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
