@@ -9,7 +9,7 @@ const particlesConfig = {
             }
         },
         color: {
-            value: '#FFFFFF'
+            value: '#00AAAA'
         },
         shape: {
             type: ['circle', 'triangle'],
@@ -40,13 +40,13 @@ const particlesConfig = {
         line_linked: {
             enable: true,
             distance: 120,
-            color: '#FFFFFF',
+            color: '#00AAAA',
             opacity: 0.15,
             width: 0.8,
             triangles: {
                 enable: true,
                 opacity: 0.08,
-                color: '#FFFFFF'
+                color: '#00AAAA'
             }
         },
         move: {
@@ -82,7 +82,7 @@ const particlesConfig = {
                 distance: 180,
                 line_linked: {
                     opacity: 0.6,
-                    color: '#FFFFFF'
+                    color: '#00AAAA'
                 }
             },
             bubble: {
